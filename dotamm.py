@@ -9,11 +9,11 @@ from bs4 import BeautifulSoup
 from collections import Counter
 
 temp = []
-
+usr = ""
+user = ""
+username = ""
 
 def getplayer(player):
-    print("Retrieving data from: " + player)
-
     # Set the URL for user
     url = "https://www.dotabuff.com/players/" + player + "/matches"
 
@@ -21,6 +21,12 @@ def getplayer(player):
     response = requests.get(url, headers={'User-agent': 'your bot 0.1'})
 
     soup = BeautifulSoup(response.text, 'html.parser')
+
+    username = soup.find("title")
+    usr = str(username).replace(" - Matches - DOTABUFF - Dota 2 Stats</title>", "")
+    user = usr.replace("<title>", "")
+    print("Retrieving data from: " + str(user) + " (" + player + ")")
+
     match = soup.findAll("td", class_='cell-icon')
     if len(match) > 0:
         for game in match:
