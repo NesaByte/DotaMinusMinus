@@ -4,8 +4,8 @@ Script used to retrieve player stats from DotaBuff website. Very useful for find
 ## Installation
 Before running DotaMinusMinus, you need to import requests and beautifulsoup4:
 ```
-import pip install requests
-import pip instal beautifulsoup4
+pip install requests
+pip instal beautifulsoup4
 ```
 
 ## Usage
