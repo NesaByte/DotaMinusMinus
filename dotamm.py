@@ -15,29 +15,41 @@ username = ""
 
 def getplayer(player):
     # Set the URL for user
-    url = "https://www.dotabuff.com/players/" + player + "/matches"
+    url_matches = "https://www.dotabuff.com/players/" + player + "/matches"
 
     # Connect to the URL. User agent is to prevent the browser to give the 429 response (too many requests)
-    response = requests.get(url, headers={'User-agent': 'your bot 0.1'})
+    response_matches = requests.get(url_matches, headers={'User-agent': 'your bot 0.1'})
 
-    soup = BeautifulSoup(response.text, 'html.parser')
+    # Parse entire html into a string
+    soup_matches = BeautifulSoup(response_matches.text, 'html.parser')
 
-    username = soup.find("title")
+    username = soup_matches.find("title")
     usr = str(username).replace(" - Matches - DOTABUFF - Dota 2 Stats</title>", "")
     user = usr.replace("<title>", "")
-    print("Retrieving data from: " + str(user) + " (" + player + ")")
+    print("* * * Retrieving data from: " + str(user) + " (" + player + ") * * *")
 
-    match = soup.findAll("td", class_='cell-icon')
+    match = soup_matches.findAll("td", class_='cell-icon')
     if len(match) > 0:
+
+        # set url to find hero winrate percentage
+        url_heroes = "https://www.dotabuff.com/players/" + player + "/heroes"
+
+        # connect to usrl_matches
+        response_heroes = requests.get(url_heroes, headers={'User-agent': 'your bot 0.1'})
+
+        # Parse entire html into a string
+        soup_heroes = BeautifulSoup(response_heroes.text, 'html.parser')
+
         for game in match:
             value = game.find("a", href=True)['href']
             newvalue = value.replace("/heroes/", "")
             temp.append(newvalue)
         count = Counter(temp)
         cc = sorted(count.items(), key=lambda item: item[1], reverse=True)
+        print("Most played heroes from last 50games:")
         for k, v in cc:
-            if v > 1:
-                print(v, k)
+            if v > 2:
+                print("    " + str(v) + " " + k)
     else:
         print("Player " + player + " does not exist.")
 
